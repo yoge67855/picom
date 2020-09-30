@@ -260,6 +260,9 @@ struct managed_win {
 #ifdef CONFIG_OPENGL
 	/// Textures and FBO background blur use.
 	glx_blur_cache_t glx_blur_cache;
+	glx_blur_cache_t glx_round_cache;
+	/// Background texture of the window
+	glx_texture_t *glx_texture_bg;
 #endif
 };
 
@@ -286,7 +289,7 @@ bool must_use destroy_win_start(session_t *ps, struct win *w);
 /// Release images bound with a window, set the *_NONE flags on the window. Only to be
 /// used when de-initializing the backend outside of win.c
 void win_release_images(struct backend_base *base, struct managed_win *w);
-winmode_t attr_pure win_calc_mode(const struct managed_win *w);
+winmode_t attr_pure win_calc_mode(session_t *ps, const struct managed_win *w);
 void win_set_shadow_force(session_t *ps, struct managed_win *w, switch_t val);
 void win_set_fade_force(struct managed_win *w, switch_t val);
 void win_set_focused_force(session_t *ps, struct managed_win *w, switch_t val);

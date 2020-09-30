@@ -686,8 +686,12 @@ bool win_client_has_alpha(const struct managed_win *w) {
 	       w->client_pictfmt->direct.alpha_mask;
 }
 
-winmode_t win_calc_mode(const struct managed_win *w) {
+winmode_t win_calc_mode(session_t *ps, const struct managed_win *w) {
 	if (w->opacity < 1.0) {
+		return WMODE_TRANS;
+	}
+
+	if (ps->o.backend == BKEND_GLX && w->corner_radius > 0) {
 		return WMODE_TRANS;
 	}
 
@@ -2329,7 +2333,7 @@ void map_win_start(session_t *ps, struct managed_win *w) {
 	w->a.map_state = XCB_MAP_STATE_VIEWABLE;
 
 	// Update window mode here to check for ARGB windows
-	w->mode = win_calc_mode(w);
+	w->mode = win_calc_mode(ps, w);
 
 	log_debug("Window (%#010x) has type %s", w->base.id, WINTYPES[w->window_type]);
 
